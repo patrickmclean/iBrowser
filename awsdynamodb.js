@@ -3,28 +3,24 @@ const config = require('./config.js');
 const uuid = require('uuid/v1');
 
 module.exports = {
-  addTestData: function(){
+  insert: function(item){
     AWS.config.update(config.aws_remote_config);
 
     const docClient = new AWS.DynamoDB.DocumentClient();
     const params = {
       TableName: config.aws_table_name,
-      Item: {
-        imageId: uuid(),
-        imagePath: '/This/is/a/path',
-      }
+      Item: item
     };
     docClient.put(params, function(err, data) {
       if (err) {
           console.log('Error: Server error: '+err);
       } else {
-        console.log('data', data);
         const { Items } = data;
       }
     });
   },
   
-  readTest: function() {
+  readAll: function() {
     AWS.config.update(config.aws_remote_config);
 
     const docClient = new AWS.DynamoDB.DocumentClient();
@@ -32,7 +28,7 @@ module.exports = {
       TableName: config.aws_table_name,
       KeyConditionExpression: 'imageId = :i',
       ExpressionAttributeValues: {
-        ':i': '003',
+        ':i': '*',
       }
     };
     docClient.query(params, function(err, data) {

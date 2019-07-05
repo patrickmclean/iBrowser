@@ -5,11 +5,10 @@ bfs.currentDirectory = './';
 
 bfs.iterateDirectoryImages(bfs.currentDirectory, function(err, results) {
     if (err) throw err;
-    console.log(results);
+    results.forEach(function(item) {
+        ddb.insert(item);
+    });
   });
 
 
-/*ddb.addTestData();
-ddb.addTestData();*/
-ddb.readTest();
-/*ddb.createTable();*/
+ddb.readAll();

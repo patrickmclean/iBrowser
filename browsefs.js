@@ -14,10 +14,14 @@ module.exports = {
             list.forEach(function(file) {
                 file = path.resolve(dir, file);
                 var image = {
+                    imageId : uuid(),
                     filename : path.basename(file),
                     folder : path.relative(that.currentDirectory,path.dirname(file)),
-                    uuid : uuid(),
-                    date : new Date()
+                    date : {
+                        year: '',
+                        month: '',
+                        day: ''
+                    }
                 }
 
                 fs.stat(file, function(err, stat) {
@@ -28,7 +32,9 @@ module.exports = {
                         })
                     } else {
                         if ((path.extname(file) == ".jpg") || (path.extname(file) == ".JPG") ) {
-                            image.date = stat.birthtime;
+                            image.date.year = stat.birthtime.getUTCFullYear();
+                            image.date.month = stat.birthtime.getUTCMonth();
+                            image.date.day = stat.birthtime.getUTCDay();
                             results.push(image);
                         }
                         if (!--pending) done(null, results);
@@ -40,3 +46,6 @@ module.exports = {
     currentDirectory: String
 }
 
+/* TODO
+Put something in the local directory to indicate what has been touched, so we don't upload the same thing twice
+*/

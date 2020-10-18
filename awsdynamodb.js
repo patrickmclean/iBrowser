@@ -1,9 +1,15 @@
 const AWS = require('aws-sdk');
-const config = require('./config.js');
+const config = require('./config/config.js');
 const uuid = require('uuid/v1');
+const algolia = require('./algolia.js');
+const logger = require('./logger.js');
 
 module.exports = {
   insert: function(item){
+    if (config.aws_ddb_use == false) return;
+    logger.write('aws ddb ', 'log: '+item.imageId,2);
+
+    // Now DDB. This is redundant with Algolia but keeping as backup
     AWS.config.update(config.aws_remote_config);
 
     const docClient = new AWS.DynamoDB.DocumentClient();
@@ -11,6 +17,7 @@ module.exports = {
       TableName: config.aws_table_name,
       Item: item
     };
+    
     docClient.put(params, function(err, data) {
       if (err) {
           console.log('Error: Server error: '+err);
@@ -35,7 +42,7 @@ module.exports = {
       if (err) {
           console.log('Error: Server error: '+err);
       } else {
-        console.log('data', data);
+        console.log('readAll', data);
         const { Items } = data;
       }
     });
@@ -57,7 +64,7 @@ module.exports = {
         if (err) {
             console.log('Error: Server error: '+err);
         } else {
-          console.log('data', data);
+          console.log('createTable', data);
           const { Items } = data;
         }
       });

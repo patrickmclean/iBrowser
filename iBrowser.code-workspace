@@ -1,7 +1,8 @@
 {
 	"folders": [
 		{
-			"path": "."
+			"name": "iBrowser",
+			"path": "/Users/patrickmclean/odrive/Google Drive - Main/Development/iBrowser"
 		}
 	],
 	"settings": {}
